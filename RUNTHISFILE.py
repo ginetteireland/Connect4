@@ -49,20 +49,20 @@ def score_move(col, grid):
 
     # amazing bonus if results in immediate win
     if is_winning_move(1, col, grid):
-        print(f"col {col}: + 10000. Winning move")
-        score += 10000
+        print(f"col {col}: + 100000. Winning move")
+        score += 100000
 
     # terrible negative if allows opponent to win next turn
     test_grid = simulate_move(1, col, grid)
     for c in range(7):
         if is_winning_move(2, c, test_grid):
-            print(f"col {col}: - 500. Allows opponent win")
-            score -= 500
+            print(f"col {col}: - 900. Allows opponent win")
+            score -= 900
     
     # big bonus if blocks opponent win
     if is_winning_move(2, col, grid):
-        print(f"col {col}: + 400. blocks opp win")
-        score += 400
+        print(f"col {col}: + 900. blocks opp win")
+        score += 900
 
     before_connections = find_connection(1, grid)
     after_connections = find_connection(1, test_grid)
@@ -119,21 +119,60 @@ def score_move(col, grid):
 
     # bonus if sets up a fork
     fork_count = 0
-    test_grid = simulate_move(1, col, grid)
-    test_valid_cols = []
+    test_grid = simulate_move(1, col, grid)    
     for c in range(7):
-        if grid[0][col] == 0:
-            test_valid_cols.append(col)
-    for c in range(7):
-        if c in test_valid_cols and is_winning_move(1, c, test_grid):
+        if grid[0][col] == 0 and is_winning_move(1, c, test_grid):
             fork_count += 1
+        
     
     if fork_count >= 2:
         print(f"col {col}: + 500. Fork created with {fork_count} winning moves")
         score += 500
     
+    # negative if allows opponent to fork
+    fork_count = 0
+    test_grid = simulate_move(1, col, grid)
+    for opp_col in range(7):
+        if test_grid[0][opp_col] == 0:
+            opp_test_grid = simulate_move(2, opp_col, test_grid)
+            opponent_winning_moves = 0
+            for next_col in range(7):
+                if opp_test_grid[0][next_col] == 0 and is_winning_move(2, next_col, opp_test_grid):
+                    opponent_winning_moves += 1
+            
+            # If opponent has two or more winning moves, fork
+            if opponent_winning_moves >= 2:
+                fork_count += 1
+    
+    if fork_count > 0:
+        score -= fork_count *200
+        print(f"col {col}: - {fork_count * 200} for allowing opponent fork with {fork_count} options")
+
+    #Bonus if dual threats for opp
+    test_grid = simulate_move(1, col, grid)
+    opponent_threats = detect_dual_threats(2, test_grid)
+    if opponent_threats > 0:
+        score -= opponent_threats * 100
+        print(f'Col {col} - {opponent_threats * 100}. opp dual threats')
+    my_dual_threats = detect_dual_threats(1, test_grid)
+    if my_dual_threats > 0:
+        score += my_dual_threats * 200        
+        print(f'Col {col} + {my_dual_threats * 100}. my dual threats')
+
     print(f'final score for col {col}: {score}')
     return score
+
+
+def detect_dual_threats(player, grid):
+    dual_threats = 0
+    for col in range(7):
+        if grid[0][col] == 0:  # Check valid columns
+            test_grid = simulate_move(player, col, grid)
+            winning_moves = sum(1 for c in range(7) if is_winning_move(player, c, test_grid))
+            if winning_moves >= 2:  # Detect two or more simultaneous threats
+                dual_threats += 1
+    return dual_threats
+
 
 def is_winning_move(player, col, grid):
     """
@@ -205,7 +244,7 @@ def calculate_move(grid):
         if col in valid_cols:
             scores.append(score_move(col, grid))
         else:
-            scores.append(-1000)
+            scores.append(-9999999)
     
     print(scores)
     highest = []
