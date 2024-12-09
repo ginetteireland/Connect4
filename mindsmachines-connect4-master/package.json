@@ -1,0 +1,55 @@
+{
+  "name": "mindsmachines-connect4",
+  "version": "1.0.0",
+  "description": "A moderator Connect 4 program for the use of the RPI Minds and Machines course for the final project",
+  "scripts": {
+    "server-dev": "nodemon src/server 5000",
+    "server": "node src/server 5000",
+    "client": "([ -d client_build/ ] || npm run build-client) && npm start",
+    "client-dev": "vite dev",
+    "build-client": "vite build",
+    "build-server": "pkg src/server/index.js -o server_build/connect4_server -c pkgconfig.json",
+    "start": "vite preview --host",
+    "test": "node testgame.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exoRift/mindsmachines-connect4.git"
+  },
+  "author": "exoRift",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/exoRift/mindsmachines-connect4/issues"
+  },
+  "dependencies": {
+    "@polka/send-type": "^0.5.2",
+    "@vitejs/plugin-react": "^2.2.0",
+    "autoprefixer": "^10.4.13",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-ws": "^5.0.2",
+    "mass-require": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^3.2.4"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.1.1",
+    "eslint": "^8.27.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-config-standard": "^17.0.0",
+    "nodemon": "^3.1.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

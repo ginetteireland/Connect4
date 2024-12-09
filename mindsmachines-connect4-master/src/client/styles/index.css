@@ -1,0 +1,26 @@
+:root {
+  --red: #ee2a36;
+  --yellow: #fde006;
+
+  --board: #205df0;
+
+  --blue: #0079c7;
+  --blue-accent: #156ee3;
+  --blue-light: #5eb8f5;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+button {
+  transition: 0.4s;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
